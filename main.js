@@ -1,7 +1,7 @@
 // This is free and unencumbered software released into the public domain.
 // See LICENSE for details
 
-const {app, BrowserWindow, Menu, protocol, ipcMain, dialog} = require('electron');
+const {app, BrowserWindow, Menu, protocol, ipcMain, ipcRenderer} = require('electron');
 const log = require('electron-log');
 const {autoUpdater} = require("electron-updater");
 
@@ -59,8 +59,13 @@ function sendStatusToWindow(text) {
   win.webContents.send('message', text);
 }
 function createDefaultWindow() {
-  win = new BrowserWindow();
-  // win.webContents.openDevTools();
+  win = new BrowserWindow({
+    webPreferences: {
+        nodeIntegration: true,
+    }
+});
+  win.webContents.openDevTools();
+
   win.on('closed', () => {
     win = null;
   });
@@ -71,7 +76,7 @@ autoUpdater.on('checking-for-update', () => {
   sendStatusToWindow('Checking for update...');
 })
 autoUpdater.on('update-available', (info) => {
-  sendStatusToWindow('Update available.');
+  sendStatusToWindow('Version ' + info.version + ' is available');
 })
 autoUpdater.on('update-not-available', (info) => {
   sendStatusToWindow('Update not available.');
@@ -85,6 +90,7 @@ autoUpdater.on('download-progress', (progressObj) => {
   log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
   sendStatusToWindow(log_message);
 })
+
 /*
 autoUpdater.on('update-downloaded', (info) => {
   sendStatusToWindow('Update downloaded');
@@ -141,16 +147,6 @@ app.on('ready', function()  {
 // })
 
 autoUpdater.on('update-downloaded', (info) => {
-dialog.showMessageBox({
-  type: 'info',
-  title: 'Update ready',
-  message: 'Install and restart ?',
-  buttons: ['Yes', 'Later']
-}, buttonIndex => {
-  if (buttonIndex === 0) {
-    sendStatusToWindow('Update downloaded');
-   autoUpdater.quitAndInstall(false, true);
-  }
-})
-   
+   sendStatusToWindow('Update downloaded');
+  autoUpdater.quitAndInstall(false, true);
 });
