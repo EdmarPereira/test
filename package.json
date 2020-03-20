@@ -1,13 +1,14 @@
 {
   "name": "electron-updater-example",
-  "version": "4.0.2",
+  "version": "4.0.6",
   "main": "main.js",
   "description": "electron-updater example project",
   "author": "Matt Haggard",
   "scripts": {
-    "publish:win": "electron-builder --win --x64 --ia32 -p always -c.win.certificateSubjectName=\"8bit Solutions LLC\"",
+    "publish:win": "electron-builder --win -p always",
     "publish:mac": "electron-builder --mac -p always",
     "dist:mac": "electron-builder --mac -p never",
+    "dist:win": "electron-builder --win",
     "electron": "electron ."
   },
   "devDependencies": {
@@ -38,15 +39,11 @@
       ]
     },
     "win": {
-      "target": [
-        "nsis-web"
-      ]
-    },
-    "nsisWeb": {
-      "oneClick": false,
-      "perMachine": true,
-      "allowToChangeInstallationDirectory": true,
-      "deleteAppDataOnUninstall": true
+      "target": "nsis",
+      "certificateFile": "private/certificate.pfx",
+      "certificatePassword": "",
+      "verifyUpdateCodeSignature": false,
+      "publisherName": "certificate"
     }
   }
 }
