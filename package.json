@@ -1,11 +1,11 @@
 {
   "name": "electron-updater-example",
-  "version": "4.0.21",
+  "version": "0.9.0",
   "main": "main.js",
   "description": "electron-updater example project",
   "author": "Matt Haggard",
   "scripts": {
-    "publish:win": "electron-builder --win -p always",
+    "publish:win": "rimraf dist && electron-builder --win -p never",
     "publish:mac": "electron-builder --mac -p always",
     "dist:mac": "electron-builder --mac -p never",
     "build-win": "rimraf dist && electron-builder -w",
@@ -17,6 +17,7 @@
     "electron-notarize": "^0.1.1"
   },
   "dependencies": {
+    "babel": "^6.23.0",
     "electron-log": "2.2.17",
     "electron-updater": "4.1.2"
   },
